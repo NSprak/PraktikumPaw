@@ -69,6 +69,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger remove-product"
+                  onclick="removeProduct(this)"
                 >
                   X
                 </button>
@@ -94,13 +95,18 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      const removeProduct = (e) => {
+        e.parentElement.parentElement.parentElement.remove();
+      };
+
       const products = document.querySelector(".products");
       const addBtn = document.querySelector(".add-product");
-
       let i = 4;
+
       addBtn.addEventListener("click", () => {
-        products.innerHTML += `
-          <div class="mb-3">
+        const newProduct = document.createElement("div");
+        newProduct.classList.add("mb-3");
+        newProduct.innerHTML = `
             <div class="row">
               <div class="col">
                 <label for="exampleFormControlInput${i}" class="form-label"
@@ -130,26 +136,19 @@
                 />
               </div>
               <div class="col-auto align-self-end">
-                <button type="button" class="btn btn-outline-danger remove-product">X</button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger remove-product"
+                  onclick="removeProduct(this)"
+                >
+                  X
+                </button>
               </div>
             </div>
-          </div>
         `;
+
+        products.appendChild(newProduct);
         i += 2;
-
-        const removeBtns = document.querySelectorAll(".remove-product");
-        removeBtns.forEach((removeBtn) => {
-          removeBtn.addEventListener("click", () => {
-            removeBtn.parentElement.parentElement.parentElement.remove();
-          });
-        });
-      });
-
-      const removeBtns = document.querySelectorAll(".remove-product");
-      removeBtns.forEach((removeBtn) => {
-        removeBtn.addEventListener("click", () => {
-          removeBtn.parentElement.parentElement.parentElement.remove();
-        });
       });
     </script>
   </body>
