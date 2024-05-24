@@ -1,12 +1,4 @@
 
-<?php
-require '../config/connection.php';
-
-
-?>
-
-
-
 
 
 
@@ -76,12 +68,6 @@ require '../config/connection.php';
                 </div>
 
 
-                <?php 
-                $transaksi = mysqli_query($conn, "SELECT * FROM transactions");
-
-
-                ?>
-
                 <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mb-4">
                     <div class="flex justify-between items-center pt-5">
                         <div class="relative overflow-x-auto  shadow-md sm:rounded-lg">
@@ -104,15 +90,14 @@ require '../config/connection.php';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $i = 1; ?>    
-                                    <?php foreach($transaksi as $row_transaksi) : ?>
+                                   
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            <?= $row_transaksi['id'] ?>
+                                            ID
                                         </th>
                                      
                                         <td class="px-6 py-4">
-                                        <?= $row_transaksi['id'] ?>
+                                            Apple Macbook
                                         </td>
                                         <td class="px-6 py-4">
                                             Laptop
@@ -121,8 +106,8 @@ require '../config/connection.php';
                                             $2999
                                         </td>
                                     </tr>
-                                    <?php endforeach ?>
-                                    <!-- <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             Microsoft Surface Pro
                                     
@@ -150,7 +135,7 @@ require '../config/connection.php';
                                         <td class="px-6 py-4">
                                             $99
                                         </td>
-                                    </tr> -->
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
