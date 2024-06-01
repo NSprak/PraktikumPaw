@@ -1,3 +1,25 @@
+<?php
+require 'config/connection.php';
+session_start();
+
+if(isset($_SESSION['login'])){
+    $id_user = $_SESSION['login'];
+    echo $id_user;
+}else {
+        echo "<script>
+            alert('anda harus login');
+            document.location.href = 'login.php';
+        </script>";
+}
+
+
+$product = mysqli_query($conn,'SELECT * FROM products');
+
+$users = mysqli_query($conn, "SELECT * FROM customers WHERE id = $id_user");
+$user = mysqli_fetch_assoc($users);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,62 +37,36 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                Product name
+                                #
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Color
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Category
+                                name
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Price
                             </th>
+                            <th scope="col" class="px-6 py-3">
+                                qty
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
+                    <?php foreach($product as $row_product): ?>
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
+                                <?= $row_product['id']?>
                             </th>
                             <td class="px-6 py-4">
-                                Silver
+                            <?= $row_product['name']?>
                             </td>
                             <td class="px-6 py-4">
-                                Laptop
+                            <?= $row_product['price']?>
                             </td>
                             <td class="px-6 py-4">
-                                $2999
+                            <?= $row_product['qty']?>
                             </td>
                         </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Microsoft Surface Pro
-                            </th>
-                            <td class="px-6 py-4">
-                                White
-                            </td>
-                            <td class="px-6 py-4">
-                                Laptop PC
-                            </td>
-                            <td class="px-6 py-4">
-                                $1999
-                            </td>
-                        </tr>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Magic Mouse 2
-                            </th>
-                            <td class="px-6 py-4">
-                                Black
-                            </td>
-                            <td class="px-6 py-4">
-                                Accessories
-                            </td>
-                            <td class="px-6 py-4">
-                                $99
-                            </td>
-                        </tr>
+                    <?php endforeach ?>
                     </tbody>
                 </table>
             </div>

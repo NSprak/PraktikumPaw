@@ -1,4 +1,10 @@
+<?php 
 
+require '../config/connection.php';
+
+
+
+?>
 
 
 
@@ -33,8 +39,16 @@
                             </svg>
                         </div>
                         <div>
-                            <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">3.4k</h5>
-                            <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Total Pendapatan</p>
+                            <?php 
+                                $result2 = mysqli_query($conn,"SELECT COUNT(DISTINCT customer_id) as jumlah_customer,SUM(total) as total_pendapatan  FROM transactions ts");
+                                $pendapatan = mysqli_fetch_assoc($result2);
+                            ?>
+                            <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1"> 
+                                <?= $pendapatan['total_pendapatan']; ?>
+                            <h5>
+                            <p class="text-sm font-normal text-gray-500 dark:text-gray-400"> 
+                                Customer yang melakukan transaksi : <?= $pendapatan['jumlah_customer'] ?>
+                            </p>
                         </div>
                     </div>
                     <!-- date -->
@@ -66,7 +80,7 @@
                 <div id="column-chart">
                     <canvas class="w-140" id="myChart"></canvas>
                 </div>
-
+                
 
                 <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mb-4">
                     <div class="flex justify-between items-center pt-5">
@@ -74,13 +88,9 @@
                             <table class="w-full text-sm  text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            #
-                                        </th>
+                                      
                                 
-                                        <th scope="col" class="px-6 py-3">
-                                            Customer
-                                        </th>
+                                        
                                         <th scope="col" class="px-6 py-3">
                                             Purchased at
                                         </th>
@@ -90,52 +100,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <th  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            ID
-                                        </th>
-                                     
-                                        <td class="px-6 py-4">
-                                            Apple Macbook
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Laptop
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $2999
-                                        </td>
-                                    </tr>
+                                    <?php
+                                        $result = mysqli_query($conn,'SELECT CAST(ts.purchased_at as DATE)as tanggalTtransaksi , SUM(ts.total) as tTrans FROM transactions ts GROUP BY tanggalTtransaksi ');
+                                        $tanggal = [];
+                                        $total_penjualan = [];
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            $tanggal[] = $row['tanggalTtransaksi'];
+                                            $total_penjualan[] = $row['tTrans'];
+                                        }
+                                        
                                     
+                                    ?>  
+
+                                    <?php foreach ($result as $row_result): ?>
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Microsoft Surface Pro
                                     
                                         <td class="px-6 py-4">
-                                            White
+                                            <?= $row_result['tanggalTtransaksi'] ?>
                                         </td>
                                         <td class="px-6 py-4">
-                                            Laptop PC
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $1999
+                                        <?= $row_result['tTrans'] ?>
                                         </td>
                                     </tr>
-                                    <tr class="bg-white dark:bg-gray-800">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Magic Mouse 2
-                                        </th>
-                                       
-                                        <td class="px-6 py-4">
-                                            Black
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Accessories
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $99
-                                        </td>
-                                    </tr>
+                                    <?php endforeach ?>
+                                    
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -162,11 +151,13 @@
 
 
     <script>
+        var label_data = <?= json_encode($tanggal) ?>;
+        var total = <?= json_encode($total_penjualan) ?>;
         var data = {
-            labels: ["Produk A", "Produk B", "Produk C", "Produk D", "Produk E"],
+            labels: label_data,
             datasets: [{
                 label: "Penjualan",
-                data: [12, 18, 9, 5, 12],
+                data: total,
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(255, 99, 132, 0.2)',
